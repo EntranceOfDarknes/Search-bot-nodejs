@@ -1,6 +1,6 @@
 const TelegramBot = require('node-telegram-bot-api');
 // const db = require('./db');
-// const { text } = require('express');
+const { text } = require('express');
 const fs = require('fs');
 const { connected } = require('process');
 const token = '7278940652:AAGVI8rk5bfTWnlFblHGyFLKQ2P0V31lQNU';
@@ -66,7 +66,11 @@ const start = (msg) => {
             ]
         }
     }
-    bot.sendMessage(chatId, `🪷سلام ${userName} عزیز خوش اومدی🪷\n\n ⚜️میتونی یک کلمه کلیدی به دلخواه بنویسی یا یکی از کلمه های پیشنهادی زیر را انتخاب کنی👩🏻‍💼🧑🏻‍💼 `, inlinekeyboard);
+    bot.sendMessage(chatId, `🪷سلام ${userName} عزیز خوش اومدی🪷
+
+میتونی یک کلمه کلیدی به دلخواه بنویسی یا یکی از کلمه های پرکاربرد و پیشنهادی زیر را انتخاب کنی👩🏻‍💼🧑🏻‍💼
+
+برای دیدن کلمات بعدی ، ربات رو دوباره استارت کن❗️ `, inlinekeyboard);
     console.log(msg);
 }
 
@@ -87,26 +91,29 @@ const Return = (msg) => {
             ]
         }
     }
-    bot.sendMessage(chatId, `🪷سلام مجدد ${userName} عزیز🪷\n\n ⚜️میتونی یک کلمه کلیدی به دلخواه بنویسی یا یکی از کلمه های پیشنهادی زیر را انتخاب کنی👩🏻‍💼🧑🏻‍💼 `, inlinekeyboard);
+    bot.sendMessage(chatId, `🪷سلام مجدد ${userName} عزیز
+    میتونی یک کلمه کلیدی به دلخواه بنویسی یا یکی از کلمه های پرکاربرد و پیشنهادی زیر را انتخاب کنی👩🏻‍💼🧑🏻‍💼
+        
+    برای دیدن کلمات بعدی ، ربات رو دوباره استارت کن❗️`, inlinekeyboard);
 }
 
-const isJoin = (query) => {
-//     const chatId = query.message.chat.id;
-//     const userId = query.from.id;
-//     if (query.data === 'check_membership') {
-//       bot.getChatMember(channelId, userId).then((data) => {
-//   if (data.status === 'member' || data.status === 'administrator' || data.status === 'creator') {
-//           bot.sendMessage(chatId, 'شما عضو این چنل هستید.');
-//         } else {
-//           bot.sendMessage(chatId, 'سلام! 🌟به نظر می‌رسد که شما هنوز عضو کانال ما نیستید. برای دسترسی به امکانات ربات، لطفاً ابتدا عضو کانال شوید. روی لینک زیر کلیک کنید:\n https://t.me/my_bot_test01 و به جمع ما بپیوندید: منتظرتون هستیم! 😊');
-//         }
-//       }).catch((err) => {
-//         console.error(err);
-//         bot.sendMessage(chatId, 'خطایی رخ داده. لطفاً دوباره امتحان کنید.');
-//       });
-//       bot.answerCallbackQuery(query.id, { text: 'در حال بررسی عضویت شما...' });
-//     }
-}
+// const isJoin = (query) => {
+// //     const chatId = query.message.chat.id;
+// //     const userId = query.from.id;
+// //     if (query.data === 'check_membership') {
+// //       bot.getChatMember(channelId, userId).then((data) => {
+// //   if (data.status === 'member' || data.status === 'administrator' || data.status === 'creator') {
+// //           bot.sendMessage(chatId, 'شما عضو این چنل هستید.');
+// //         } else {
+// //           bot.sendMessage(chatId, 'سلام! 🌟به نظر می‌رسد که شما هنوز عضو کانال ما نیستید. برای دسترسی به امکانات ربات، لطفاً ابتدا عضو کانال شوید. روی لینک زیر کلیک کنید:\n https://t.me/my_bot_test01 و به جمع ما بپیوندید: منتظرتون هستیم! 😊');
+// //         }
+// //       }).catch((err) => {
+// //         console.error(err);
+// //         bot.sendMessage(chatId, 'خطایی رخ داده. لطفاً دوباره امتحان کنید.');
+// //       });
+// //       bot.answerCallbackQuery(query.id, { text: 'در حال بررسی عضویت شما...' });
+// //     }
+// }
 
 // bot.on('callback_query', (query) => {
 //     const commands = query.data;
@@ -133,6 +140,7 @@ const isJoin = (query) => {
 
 bot.on('callback_query', (query) => {
   const command = query.data;
+  const chatId = query.message.chat.id;
   
   console.log('Received command: ', command);
 
@@ -146,7 +154,23 @@ bot.on('callback_query', (query) => {
       if (data.status === 'member' || data.status === 'administrator' || data.status === 'creator') {
         bot.sendMessage(chatId, 'شما عضو این چنل هستید.');
       } else {
-        bot.sendMessage(chatId, 'سلام! به نظر میرسد که شما هنوز عضو کانال ما نیستید. برای دسترسی به امکانات ربات، لطفاً ابتدا عضو کانال شوید. روی لینک زیر کلیک کنید:\n @search_bot_tg و به جمع ما بپیوندید: منتظرتون هستیم! ');
+        const inlinekeyboard = {
+            reply_markup : {
+                inline_keyboard : [
+                    [
+                        {
+                            text : 'عضوشدم',
+                            callback_data : '/joined'
+                        }
+                    ]
+                ]
+            }
+        }
+        bot.sendMessage(chatId, `
+سلام! 🌟
+به نظر می‌رسد که شما هنوز عضو کانال ما نیستید. برای دسترسی به امکانات ربات، لطفاً ابتدا عضو کانال شوید. روی لینک زیر کلیک کنید و به جمع ما بپیوندید:
+@search_bot_tg
+منتظرتون هستیم! 😊`, inlinekeyboard);
       }
     }).catch((err) => {
       console.error(err);
@@ -155,4 +179,41 @@ bot.on('callback_query', (query) => {
 
     bot.answerCallbackQuery(query.id, { text: 'در حال بررسی عضویت شما...' });
   }
+
+    if (command === '/joined') {
+        const chatId = query.message.chat.id;
+        const userId = query.from.id;
+    
+        bot.getChatMember(channelId, userId).then((data) => {
+          if (data.status === 'member' || data.status === 'administrator' || data.status === 'creator') {
+            bot.sendMessage(chatId, `تبریک! 🎉
+شما با موفقیت عضو کانال ما شدید. از این پس می‌توانید از ربات استفاده کنید💝
+خوش آمدید! 🌟`);
+          } else {
+            const inlinekeyboard = {
+                reply_markup : {
+                    inline_keyboard : [
+                        [
+                            {
+                                text : 'عضوشدم',
+                                callback_data : '/joined'
+                            }
+                        ]
+                    ]
+                }
+            }
+            bot.sendMessage(chatId, `
+    سلام! 🌟
+    به نظر می‌رسد که شما هنوز عضو کانال ما نیستید. برای دسترسی به امکانات ربات، لطفاً ابتدا عضو کانال شوید. روی لینک زیر کلیک کنید و به جمع ما بپیوندید:
+    @search_bot_tg
+    منتظرتون هستیم! 😊`, inlinekeyboard);
+          }
+        }).catch((err) => {
+          console.error(err);
+          bot.sendMessage(chatId, 'خطایی رخ داده. لطفاً دوباره امتحان کنید.');
+        });
+
+    bot.answerCallbackQuery(query.id, { text: 'در حال بررسی عضویت شما...' });
+    }
+
 });
