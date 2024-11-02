@@ -186,9 +186,24 @@ bot.on('callback_query', (query) => {
     
         bot.getChatMember(channelId, userId).then((data) => {
           if (data.status === 'member' || data.status === 'administrator' || data.status === 'creator') {
+            // const chatId = msg.chat.id;
+            const inlinekeyboard = {
+                reply_markup : {
+                    inline_keyboard : [
+                        [
+                            {text : keyWords[Math.floor(Math.random() * 41)] , callback_data : '/isJoin'},
+                            {text : keyWords[Math.floor(Math.random() * 41)] , callback_data : '/isJoin'}
+                        ],
+                        [
+                            {text : keyWords[Math.floor(Math.random() * 41)] , callback_data : '/isJoin'},
+                            {text : keyWords[Math.floor(Math.random() * 41)] , callback_data : '/isJoin'}
+                        ]       
+                    ]
+                }
+            }
             bot.sendMessage(chatId, `تبریک! 🎉
 شما با موفقیت عضو کانال ما شدید. از این پس می‌توانید از ربات استفاده کنید💝
-خوش آمدید! 🌟`);
+خوش آمدید! 🌟`, inlinekeyboard);
           } else {
             const inlinekeyboard = {
                 reply_markup : {
@@ -216,4 +231,39 @@ bot.on('callback_query', (query) => {
     bot.answerCallbackQuery(query.id, { text: 'در حال بررسی عضویت شما...' });
     }
 
+});
+bot.on('message', (msg) => {
+    if (msg.text.length > 0) {
+        const chatId = query.message.chat.id;
+        const userId = query.from.id;
+    
+        bot.getChatMember(channelId, userId).then((data) => {
+          if (data.status === 'member' || data.status === 'administrator' || data.status === 'creator') {
+            bot.sendMessage(chatId, 'شما عضو این چنل هستید.');
+          } else {
+            const inlinekeyboard = {
+                reply_markup : {
+                    inline_keyboard : [
+                        [
+                            {
+                                text : 'عضوشدم',
+                                callback_data : '/joined'
+                            }
+                        ]
+                    ]
+                }
+            }
+            bot.sendMessage(chatId, `
+    سلام! 🌟
+    به نظر می‌رسد که شما هنوز عضو کانال ما نیستید. برای دسترسی به امکانات ربات، لطفاً ابتدا عضو کانال شوید. روی لینک زیر کلیک کنید و به جمع ما بپیوندید:
+    @search_bot_tg
+    منتظرتون هستیم! 😊`, inlinekeyboard);
+          }
+        }).catch((err) => {
+          console.error(err);
+          bot.sendMessage(chatId, 'خطایی رخ داده. لطفاً دوباره امتحان کنید.');
+        });
+    
+        bot.answerCallbackQuery(query.id, { text: 'در حال بررسی عضویت شما...' });
+    }
 });
